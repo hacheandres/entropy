@@ -41,12 +41,11 @@ int main( int argc, char* argv[])
 	input.close() ;
 
 	//Print report 
-
 	cout << "Entropy report for file: " << filename << endl ;
 	int nblocks = entropy_by_block.size(); 
 
-	cout.precision(2);
-	cout << "block# \t\t entropy" << endl ;
+	cout.precision(3);
+	cout << "block# \t\tentropy" << endl ;
 	
 	for (int i = 0 ; i < nblocks ; i++ )
 	{
@@ -78,7 +77,6 @@ bool arguments_process( int _argc, char *_argv[] , int & _blocksize , string & _
 	{
 		/* Si ingreso exactamente 4 argumentos, tambien me deberia haber ingresado el 
 		tamanio de bloque */
-		
 		_filename = _argv[3] ;	//El ultimo argumento es el nombre del archivo.
 
 		string blockarg( _argv[1] );
@@ -95,8 +93,7 @@ bool arguments_process( int _argc, char *_argv[] , int & _blocksize , string & _
 			{
 				/* Si el tamanio es menor o igual a 0, solo por precaucion seteo el blocksize 
 				con su valor por defecto y devuelvo false para informar que hubo un error */
-				cerr << "Error: Invalid block size : "
-				 	<< _blocksize << endl ;
+				cerr << "Error: Invalid block size : " << _blocksize << endl ;
 				_blocksize = BLOCKSIZE_DEFAULT ;
 				ret = false ;
 			}
@@ -126,14 +123,16 @@ float entropy_block( const char * buf, int n )
 	#define BYTES_MAX_VALUE 256 
 	
 	std::vector<int> bytes_count(BYTES_MAX_VALUE, 0) ;	//Llevare la cuenta de las apariciones de cada byte	
-	float ent = 0.0, prob = 0.0; 
+	float entropy = 0.0, prob = 0.0; 
 
+	unsigned char byte = 0 ;
 	for( int i = 0 ; i < n ; i++ )
 	{
-		/*Uso el valor del byte para indexar el vector bytes_count y así incrementar 
+		byte = buf[i] ;
+		/* Uso el valor del byte para indexar el vector bytes_count y así incrementar 
 		el valor de dicha posición, de esta forma llevo la cuenta de las apariciones
-		de cada byte*/
-		bytes_count[ buf[i] ]++ ;
+		de cada byte */
+		bytes_count[ byte ]++ ;
 	} 
 
 	for( int i = 0 ; i < BYTES_MAX_VALUE ; i++ )
@@ -141,12 +140,11 @@ float entropy_block( const char * buf, int n )
 		if( bytes_count[i] != 0 )	//Si el byte no aparecio en la secuencia no aporta a la entropia
 		{
 			prob = (float) bytes_count[i] / n ;
-			ent -= prob * log2( prob ); 
+			entropy -= prob * log2( prob ); 
 		}
 	}
 
-	return ent ;
-
+	return entropy ;
 }
 
 void entropy_file( ifstream & _input, vector<float> & _ent_by_block , int _blocksize, int & _lowe, int & _highe)
@@ -157,24 +155,37 @@ void entropy_file( ifstream & _input, vector<float> & _ent_by_block , int _block
 	float ent = 0.0 ;
 
 	if( block == NULL )
+	{
+		cerr << "Error: Cannot allocate " << _blocksize << " bytes in memory" << endl ;
 		return ;
+	}
 
 	_input.read ( block , _blocksize );
 	nread = _input.gcount() ;
-	
+
 	while( nread > 0 )
 	{
-		// cout << "nread: " << nread << endl ;
-		
 		ent = entropy_block( block , nread ) ;
-		_ent_by_block.push_back( ent );
-
+		try {
+			_ent_by_block.push_back( ent );
+		}
+		catch(const std::bad_alloc &) {
+			cerr << "Memory error. Try with a bigger block size" << endl;
+			delete block ;
+			return ; 
+		}
+		catch(...) {
+			cerr << "Generic exception" << endl;
+			delete block ;
+			return ; 
+		}
+		
 		if( ent > 7 )
 			_highe++;
 		else if ( ent < 2)
 			_lowe++ ;
 
-		_input.read ( & block[0], _blocksize );
+		_input.read ( block, _blocksize );
 		nread = _input.gcount() ;
 	}
 
