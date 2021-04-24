@@ -128,14 +128,12 @@ float entropy_block( const char * buf, int n )
 	std::vector<int> bytes_count(BYTES_MAX_VALUE, 0) ;	//Llevare la cuenta de las apariciones de cada byte	
 	float ent = 0.0, prob = 0.0; 
 
-	unsigned char byte = 0 ;
 	for( int i = 0 ; i < n ; i++ )
 	{
-		byte = (unsigned char ) buf[i] ;
 		/*Uso el valor del byte para indexar el vector bytes_count y así incrementar 
 		el valor de dicha posición, de esta forma llevo la cuenta de las apariciones
 		de cada byte*/
-		bytes_count[ byte ]++ ;
+		bytes_count[ buf[i] ]++ ;
 	} 
 
 	for( int i = 0 ; i < BYTES_MAX_VALUE ; i++ )
@@ -146,8 +144,6 @@ float entropy_block( const char * buf, int n )
 			ent -= prob * log2( prob ); 
 		}
 	}
-
-	cout << endl ;
 
 	return ent ;
 
