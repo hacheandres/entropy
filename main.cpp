@@ -50,7 +50,18 @@ int main( int argc, char* argv[])
 	return 0 ;
 }
 
-
+/**
+ * @brief Procesa los argumentos recibidos por la linea de comandos.
+ * 
+ * @param _argc Cantidad de argumentos a procesar.
+ * @param _argv Argumentos a procesar.
+ * @param _blocksize Se usará para guardar el tamanio de bloque. 
+ * @param _filename Se usará para guardar el nombre del archivo a analizar.
+ * @return true si todos los argumentos se procesaron correctamente.
+ * @return false si falla porque los argumentos son erroneos o porque 
+ * no recibio la cantidad correcta de argumentos.
+ * TODO: Crear una mejor validación para la lectura de blocksize 
+ */
 bool arguments_process( int _argc, char *_argv[] , int & _blocksize , string & _filename )
 {
 	bool ret = false ;

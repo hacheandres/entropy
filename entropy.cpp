@@ -3,6 +3,13 @@
 Entropy::Entropy(){};
 Entropy::~Entropy(){};
 
+/**
+ * @brief Calcula la entropia de un bloque
+ * 
+ * @param buf Bloque a analizar. Debe apuntar a un bloque de memoria de tamanio n o mayor
+ * @param n Cantidad de bytes a analizar en buf.
+ * @return float : El valor de entropia de dicho bloque.
+ */
 float Entropy::entropy_block( const char * buf, int n )
 { 
 	#define BYTES_MAX_VALUE 256 
@@ -33,13 +40,15 @@ float Entropy::entropy_block( const char * buf, int n )
 }
 
 /**
- * @brief 
+ * @brief Calcula la entropia de un archivo filename, analizandolo por bloques 
+ * de tamanio _blocksize.
  * 
- * @param filename 
- * @param _ent_by_block 
- * @param _blocksize 
- * @param _lowe 
- * @param _highe 
+ * @param filename Nombre del archivo a analizar
+ * @param _ent_by_block Acá se guardarán los valores de entropia de cada block 
+ * @param _blocksize Tamanio de bloque que se analizaran
+ * @param _lowe Devuelve la cantidad de bloques con entropia < 2
+ * @param _highe Devuelve la cantidad de bloques con entropia > 7
+ * @return Entropy::status Retorna si se ejecuto correctamente o el motivo del fallo.
  */
 Entropy::status Entropy::calculate( const string & filename, vector<float> & _ent_by_block , int _blocksize, int & _lowe, int & _highe)
 {
