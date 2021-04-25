@@ -45,7 +45,7 @@ int main( int argc, char* argv[])
 	
 	for (int i = 0 ; i < nblocks ; i++ )
 	{
-		cout << i << "\t\t" << entropy_by_block[i] << endl ;
+		cout << "  " << i << "\t\t  " << entropy_by_block[i] << endl ;
 	}
 
 	cout << "Low entropy blocks: " << lowentropy << endl ;
