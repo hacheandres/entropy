@@ -19,13 +19,11 @@ int main( int argc, char* argv[])
 		return -1 ;
 	}
 
-	cout << filename << " " << blocksize << endl ;
-
 	std::vector<float> entropy_by_block ;
 	int lowentropy = 0 , highentropy = 0;
 	Entropy entropy ;
-
 	Entropy::status err ;
+
 	err = entropy.calculate( filename, entropy_by_block, blocksize, lowentropy, highentropy ) ;
 
 	if( err != Entropy::OK )
