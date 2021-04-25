@@ -7,8 +7,6 @@ using namespace std ;
 #define BLOCKSIZE_DEFAULT 1024
 
 bool arguments_process( int _argc, char *_argv[] , int & _blocksize , string & _filename );
-float entropy_block( const std::vector<char> & , int );
-void entropy_file( ifstream &, vector<float> &, int, int &, int &);
 
 int main( int argc, char* argv[])
 {
