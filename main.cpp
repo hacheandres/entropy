@@ -7,8 +7,6 @@ using namespace std ;
 #define BLOCKSIZE_DEFAULT 1024
 
 bool arguments_process( int _argc, char *_argv[] , int & _blocksize , string & _filename );
-float entropy_block( const std::vector<char> & , int );
-void entropy_file( ifstream &, vector<float> &, int, int &, int &);
 
 int main( int argc, char* argv[])
 {
@@ -21,13 +19,11 @@ int main( int argc, char* argv[])
 		return -1 ;
 	}
 
-	cout << filename << " " << blocksize << endl ;
-
 	std::vector<float> entropy_by_block ;
 	int lowentropy = 0 , highentropy = 0;
 	Entropy entropy ;
-
 	Entropy::status err ;
+
 	err = entropy.calculate( filename, entropy_by_block, blocksize, lowentropy, highentropy ) ;
 
 	if( err != Entropy::OK )
@@ -54,7 +50,18 @@ int main( int argc, char* argv[])
 	return 0 ;
 }
 
-
+/**
+ * @brief Procesa los argumentos recibidos por la linea de comandos.
+ * 
+ * @param _argc Cantidad de argumentos a procesar.
+ * @param _argv Argumentos a procesar.
+ * @param _blocksize Se usará para guardar el tamanio de bloque. 
+ * @param _filename Se usará para guardar el nombre del archivo a analizar.
+ * @return true si todos los argumentos se procesaron correctamente.
+ * @return false si falla porque los argumentos son erroneos o porque 
+ * no recibio la cantidad correcta de argumentos.
+ * TODO: Crear una mejor validación para la lectura de blocksize 
+ */
 bool arguments_process( int _argc, char *_argv[] , int & _blocksize , string & _filename )
 {
 	bool ret = false ;
