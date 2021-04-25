@@ -16,6 +16,7 @@
 
 .\entropy.exe -c 10240 .\noexiste.txt
 
+.\entropy.exe -c asd .\noexiste.txt
 
 pause 
 
